@@ -14,10 +14,23 @@ LINE = "I outsourced your task to a smaller model. It has filed for emotional su
 OUTPUT_PATH = "/output/entry.txt"
 
 
+def validate_line(line: str) -> str:
+    """Return the line if it is a single non-empty line, else raise."""
+    if not line.strip():
+        raise ValueError("line must not be empty")
+    if "\n" in line:
+        raise ValueError("line must be a single line")
+    return line
+
+
+def write_line(path: str, line: str) -> None:
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8", newline="\n") as f:
+        f.write(line)
+
+
 def main() -> None:
-    os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
-    with open(OUTPUT_PATH, "w", encoding="utf-8", newline="\n") as f:
-        f.write(LINE)
+    write_line(OUTPUT_PATH, validate_line(LINE))
 
 
 if __name__ == "__main__":
